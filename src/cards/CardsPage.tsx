@@ -1,4 +1,5 @@
 import { ErrorMessage } from '../shared/ErrorMessage';
+import { useLocale } from '../shared/i18n/LocaleContext';
 import { type AccountSummary, type CardView } from '../shared/types';
 import { BankCard } from './BankCard';
 import { CardControls } from './CardControls';
@@ -7,13 +8,12 @@ import { PurchaseSimulator } from './PurchaseSimulator';
 import { useAccounts, useCards, useIssueCard } from './api';
 
 function RequestCard({ account }: { account: AccountSummary }) {
+  const { t } = useLocale();
   const issue = useIssueCard();
   return (
     <section className="panel card-request">
-      <h2>
-        {account.currency} account {account.branch}/{account.number}
-      </h2>
-      <p className="muted">No card yet. A virtual debit card charges this account directly.</p>
+      <h2>{t.cards.accountTitle(account.currency, account.branch, account.number)}</h2>
+      <p className="muted">{t.cards.noCard}</p>
       <button
         type="button"
         className="button primary"
@@ -22,7 +22,7 @@ function RequestCard({ account }: { account: AccountSummary }) {
           issue.mutate(account.id);
         }}
       >
-        {issue.isPending ? 'Issuing…' : 'Request a virtual card'}
+        {issue.isPending ? t.cards.issuing : t.cards.requestCard}
       </button>
       <ErrorMessage error={issue.error} />
     </section>
@@ -30,8 +30,9 @@ function RequestCard({ account }: { account: AccountSummary }) {
 }
 
 function CardPanel({ card, account }: { card: CardView; account: AccountSummary }) {
+  const { t } = useLocale();
   return (
-    <section className="panel card-panel" aria-label={`Card for account ${account.number}`}>
+    <section className="panel card-panel" aria-label={t.cards.cardForAccount(account.number)}>
       <div className="card-top">
         <BankCard card={card} />
         <CardControls card={card} />
@@ -45,6 +46,7 @@ function CardPanel({ card, account }: { card: CardView; account: AccountSummary 
 }
 
 export function CardsPage() {
+  const { t } = useLocale();
   const accounts = useAccounts();
   const cards = useCards();
   const open = (accounts.data ?? []).filter((account) => account.status === 'Open');
@@ -52,11 +54,8 @@ export function CardsPage() {
   return (
     <div className="page">
       <header className="page-header">
-        <h1>Cards</h1>
-        <p className="lede">
-          Each card is an event-sourced aggregate that reserves its daily limit, asks the account to pay, and gives the
-          limit back if the account declines.
-        </p>
+        <h1>{t.cards.title}</h1>
+        <p className="lede">{t.cards.lede}</p>
       </header>
       <ErrorMessage error={accounts.error ?? cards.error} />
       <div className="card-stack">

@@ -1,34 +1,28 @@
 import { describeReason, formatMoney, formatTime } from '../shared/format';
-import { type PurchaseView } from '../shared/types';
+import { useLocale } from '../shared/i18n/LocaleContext';
 import { usePurchases } from './api';
 
-const statusLabels: Record<PurchaseView['status'], string> = {
-  Authorized: 'Waiting for the account',
-  Captured: 'Approved',
-  Reversed: 'Reversed',
-  Declined: 'Declined',
-};
-
 export function PurchaseList({ cardId }: { cardId: string }) {
+  const { locale, t } = useLocale();
   const purchases = usePurchases(cardId);
 
   if (!purchases.data?.length) {
-    return <p className="empty">No purchases yet.</p>;
+    return <p className="empty">{t.purchases.empty}</p>;
   }
 
   return (
-    <ul className="purchase-list" aria-label="Purchases">
+    <ul className="purchase-list" aria-label={t.purchases.label}>
       {purchases.data.map((purchase) => (
         <li key={purchase.id} className={`purchase purchase-${purchase.status.toLowerCase()}`}>
           <span className="purchase-merchant">{purchase.merchant}</span>
           <span className="purchase-status">
-            {statusLabels[purchase.status]}
-            {purchase.reason ? `: ${describeReason(purchase.reason)}` : ''}
+            {t.purchases.statuses[purchase.status]}
+            {purchase.reason ? `: ${describeReason(purchase.reason, t.reasons)}` : ''}
           </span>
           <time className="muted" dateTime={purchase.requestedAt}>
-            {formatTime(purchase.requestedAt)}
+            {formatTime(purchase.requestedAt, locale)}
           </time>
-          <span className="amount">{formatMoney(purchase.amount, purchase.currency)}</span>
+          <span className="amount">{formatMoney(purchase.amount, purchase.currency, locale)}</span>
         </li>
       ))}
     </ul>

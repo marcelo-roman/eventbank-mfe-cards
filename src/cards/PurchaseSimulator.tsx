@@ -1,9 +1,11 @@
 import { type SyntheticEvent, useState } from 'react';
 import { ErrorMessage } from '../shared/ErrorMessage';
+import { useLocale } from '../shared/i18n/LocaleContext';
 import { type CardView } from '../shared/types';
 import { usePurchase } from './api';
 
 export function PurchaseSimulator({ card }: { card: CardView }) {
+  const { t } = useLocale();
   const purchase = usePurchase(card.id);
   const [merchant, setMerchant] = useState('');
   const [amount, setAmount] = useState('');
@@ -22,13 +24,11 @@ export function PurchaseSimulator({ card }: { card: CardView }) {
 
   return (
     <form className="form purchase-form" onSubmit={pay}>
-      <h3>Simulate a purchase</h3>
-      <p className="muted">
-        Acts as the card terminal of a shop. The card checks its status and limit, then charges the account.
-      </p>
+      <h3>{t.simulator.title}</h3>
+      <p className="muted">{t.simulator.lede}</p>
       <div className="purchase-fields">
         <label className="field">
-          <span>Merchant</span>
+          <span>{t.simulator.merchant}</span>
           <input
             value={merchant}
             onChange={(event) => {
@@ -39,7 +39,7 @@ export function PurchaseSimulator({ card }: { card: CardView }) {
           />
         </label>
         <label className="field">
-          <span>Amount in {card.currency}</span>
+          <span>{t.simulator.amountIn(card.currency)}</span>
           <input
             type="number"
             inputMode="decimal"
@@ -54,7 +54,7 @@ export function PurchaseSimulator({ card }: { card: CardView }) {
         </label>
       </div>
       <button type="submit" className="button primary" disabled={purchase.isPending}>
-        {purchase.isPending ? 'Paying…' : 'Pay with this card'}
+        {purchase.isPending ? t.simulator.paying : t.simulator.pay}
       </button>
       <ErrorMessage error={purchase.error} />
     </form>
