@@ -1,0 +1,153 @@
+import { type Locale } from './locale';
+
+const en = {
+  errors: {
+    generic: 'Something failed. Try again.',
+    sessionEnded: 'Your session ended. Sign in again.',
+    forbidden: 'You are not allowed to do this.',
+    status: (status: number) => `The server answered ${status}.`,
+    codes: {
+      card_already_issued: 'This account already has a card.',
+      card_already_blocked: 'The card is already blocked.',
+      card_not_blocked: 'The card is not blocked.',
+      invalid_daily_limit: 'The daily limit is out of the allowed range.',
+      invalid_merchant: 'Merchant name must have between 2 and 60 characters.',
+      invalid_card_number: 'This is not a valid card number.',
+      invalid_amount: 'Amount must be greater than zero and have at most two decimal places.',
+      unsupported_currency: 'This currency is not supported.',
+      account_closed: 'The account is closed.',
+      insufficient_funds: 'The balance does not cover this amount.',
+      currency_mismatch: 'The accounts operate in different currencies.',
+      not_found: 'This was not found.',
+      forbidden: 'You are not allowed to do this.',
+      concurrency_conflict: 'Someone changed this at the same time. Try again.',
+    } as Record<string, string>,
+  },
+  reasons: {
+    insufficient_funds: 'insufficient funds',
+    account_closed: 'account closed',
+    currency_mismatch: 'currency mismatch',
+    card_blocked: 'card blocked',
+    daily_limit_exceeded: 'over the daily limit',
+  } as Record<string, string>,
+  cards: {
+    title: 'Cards',
+    lede: 'Each card is an event-sourced aggregate that reserves its daily limit, asks the account to pay, and gives the limit back if the account declines.',
+    accountTitle: (currency: string, branch: string, number: string) => `${currency} account ${branch}/${number}`,
+    noCard: 'No card yet. A virtual debit card charges this account directly.',
+    issuing: 'Issuing…',
+    requestCard: 'Request a virtual card',
+    cardForAccount: (number: string) => `Card for account ${number}`,
+  },
+  bankCard: {
+    endingIn: (last4: string) => `Card ending in ${last4}`,
+    brand: 'EventBank debit',
+    validThru: (expiry: string) => `Valid thru ${expiry}`,
+    blocked: 'Blocked',
+  },
+  controls: {
+    spentToday: 'Spent today',
+    of: 'of',
+    limitUsed: 'Daily limit used',
+    limitIn: (currency: string) => `Daily limit in ${currency}`,
+    saveLimit: 'Save limit',
+    block: 'Block card',
+    unblock: 'Unblock card',
+  },
+  simulator: {
+    title: 'Simulate a purchase',
+    lede: 'Acts as the card terminal of a shop. The card checks its status and limit, then charges the account.',
+    merchant: 'Merchant',
+    amountIn: (currency: string) => `Amount in ${currency}`,
+    paying: 'Paying…',
+    pay: 'Pay with this card',
+  },
+  purchases: {
+    empty: 'No purchases yet.',
+    label: 'Purchases',
+    statuses: {
+      Authorized: 'Waiting for the account',
+      Captured: 'Approved',
+      Reversed: 'Reversed',
+      Declined: 'Declined',
+    },
+  },
+};
+
+export type Messages = typeof en;
+
+const ptBR: Messages = {
+  errors: {
+    generic: 'Algo deu errado. Tente de novo.',
+    sessionEnded: 'Sua sessão terminou. Entre novamente.',
+    forbidden: 'Você não tem permissão para fazer isso.',
+    status: (status: number) => `O servidor respondeu ${status}.`,
+    codes: {
+      card_already_issued: 'Esta conta já tem um cartão.',
+      card_already_blocked: 'O cartão já está bloqueado.',
+      card_not_blocked: 'O cartão não está bloqueado.',
+      invalid_daily_limit: 'O limite diário está fora da faixa permitida.',
+      invalid_merchant: 'O nome do estabelecimento deve ter entre 2 e 60 caracteres.',
+      invalid_card_number: 'Este não é um número de cartão válido.',
+      invalid_amount: 'O valor deve ser maior que zero e ter no máximo duas casas decimais.',
+      unsupported_currency: 'Esta moeda não é aceita.',
+      account_closed: 'A conta está encerrada.',
+      insufficient_funds: 'O saldo não cobre este valor.',
+      currency_mismatch: 'As contas operam em moedas diferentes.',
+      not_found: 'Não encontrado.',
+      forbidden: 'Você não tem permissão para fazer isso.',
+      concurrency_conflict: 'Alguém alterou isto ao mesmo tempo. Tente de novo.',
+    },
+  },
+  reasons: {
+    insufficient_funds: 'saldo insuficiente',
+    account_closed: 'conta encerrada',
+    currency_mismatch: 'moedas diferentes',
+    card_blocked: 'cartão bloqueado',
+    daily_limit_exceeded: 'acima do limite diário',
+  },
+  cards: {
+    title: 'Cartões',
+    lede: 'Cada cartão é um agregado com event sourcing que reserva o limite diário, pede à conta que pague e devolve o limite se a conta recusar.',
+    accountTitle: (currency: string, branch: string, number: string) => `Conta ${currency} ${branch}/${number}`,
+    noCard: 'Ainda sem cartão. Um cartão virtual de débito cobra direto nesta conta.',
+    issuing: 'Emitindo…',
+    requestCard: 'Pedir um cartão virtual',
+    cardForAccount: (number: string) => `Cartão da conta ${number}`,
+  },
+  bankCard: {
+    endingIn: (last4: string) => `Cartão com final ${last4}`,
+    brand: 'EventBank débito',
+    validThru: (expiry: string) => `Válido até ${expiry}`,
+    blocked: 'Bloqueado',
+  },
+  controls: {
+    spentToday: 'Gasto hoje',
+    of: 'de',
+    limitUsed: 'Limite diário usado',
+    limitIn: (currency: string) => `Limite diário em ${currency}`,
+    saveLimit: 'Salvar limite',
+    block: 'Bloquear cartão',
+    unblock: 'Desbloquear cartão',
+  },
+  simulator: {
+    title: 'Simular uma compra',
+    lede: 'Faz o papel da maquininha de uma loja. O cartão confere o status e o limite e depois cobra da conta.',
+    merchant: 'Estabelecimento',
+    amountIn: (currency: string) => `Valor em ${currency}`,
+    paying: 'Pagando…',
+    pay: 'Pagar com este cartão',
+  },
+  purchases: {
+    empty: 'Nenhuma compra ainda.',
+    label: 'Compras',
+    statuses: {
+      Authorized: 'Aguardando a conta',
+      Captured: 'Aprovada',
+      Reversed: 'Estornada',
+      Declined: 'Recusada',
+    },
+  },
+};
+
+export const messages: Record<Locale, Messages> = { en, 'pt-BR': ptBR };
